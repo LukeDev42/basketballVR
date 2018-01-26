@@ -5,6 +5,9 @@ using UnityEngine;
 public class ContollerBehavior : MonoBehaviour
 {
 
+    public GameObject basketball;
+
+    Vector3 basketballOrigin = new Vector3(0, 1, -8);
     private SteamVR_TrackedObject trackedObj;
     private GameObject collidingObject;
     private GameObject objectInHand;
@@ -13,7 +16,16 @@ public class ContollerBehavior : MonoBehaviour
     {
         get { return SteamVR_Controller.Input((int)trackedObj.index); }
     }
-
+    private void FixedUpdate()
+    {
+        if(Controller.GetPressUp(SteamVR_Controller.ButtonMask.Touchpad))
+        {
+            basketball.transform.position = basketballOrigin;
+            basketball.GetComponent<Rigidbody>().velocity = Vector3.zero;
+            basketball.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+        }
+        
+    }
     private void Awake()
     {
         trackedObj = GetComponent<SteamVR_TrackedObject>();
