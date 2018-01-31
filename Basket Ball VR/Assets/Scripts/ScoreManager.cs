@@ -5,43 +5,34 @@ using UnityEngine.UI;
 
 public class ScoreManager : MonoBehaviour {
 
-    public Text scoreText;
-    public BoxCollider ScoreKeeper;
-
-    int newScoreValue = 0;
-    int score;
+    public TextMesh scoreText;
+    public BoxCollider scoreKeeper;
+    public static int score;
 
     private void Awake()
     {
-        scoreText = GetComponent<Text>();
+        scoreKeeper = GetComponent<BoxCollider>();
         score = 0;
-        UpdateScore();
     }
 
     void Update()
     {
-        if (ScoreKeeper)
-        {
-            UpdateScore();
-        }
-        AddScore(newScoreValue);
-        Debug.Log(newScoreValue);
-        scoreText.text = " " + score;
+        OnTriggerEnter(scoreKeeper);
+        Debug.Log(score);
+        UpdateScore();
 	}
 
-    //Add to the actual score
-    void AddScore (int newScoreValue)
+    private void OnTriggerEnter(Collider scoreKeeper)
     {
-        score += newScoreValue;
-        UpdateScore();
-    }
-    //Find the new score value
-    int UpdateScore()
-    {
-        if(ScoreKeeper)
+        if(scoreKeeper)
         {
-            newScoreValue = 1 + newScoreValue;
+            score += 1;
         }
-        return newScoreValue;
+        return;
+    }
+
+    void UpdateScore()
+    {
+        scoreText.text = "Score: " + score;
     }
 }
