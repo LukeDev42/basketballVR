@@ -13,24 +13,30 @@ public class ScoreManager : MonoBehaviour {
     {
         scoreKeeper = GetComponent<BoxCollider>();
         score = 0;
+        UpdateScore();
     }
 
     void Update()
     {
-        OnTriggerEnter(scoreKeeper);
         Debug.Log(score);
-        UpdateScore();
+        
 	}
 
-    private void OnTriggerEnter(Collider scoreKeeper)
+    private void OnTriggerEnter(Collider col)
     {
-        if(scoreKeeper)
+        switch(col.tag)
         {
-            score += 1;
+            case "Trigger":
+                AddScore(1);
+                break;
         }
-        return;
     }
 
+    void AddScore(int newScoreValue)
+    {
+        score += newScoreValue;
+        UpdateScore();
+    }
     void UpdateScore()
     {
         scoreText.text = "Score: " + score;
