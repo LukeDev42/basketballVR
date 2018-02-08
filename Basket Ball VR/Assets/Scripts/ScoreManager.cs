@@ -8,7 +8,7 @@ public class ScoreManager : MonoBehaviour {
 
     private void Start()
     {
-        scoreAdder = GameObject.FindObjectOfType<ScoreAdder>();
+        scoreAdder = FindObjectOfType<ScoreAdder>();
     }
 
     private void OnTriggerEnter(Collider col)
