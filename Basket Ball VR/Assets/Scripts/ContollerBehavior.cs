@@ -6,7 +6,7 @@ public class ContollerBehavior : MonoBehaviour
 {
 
     public GameObject basketball;
-
+    
     Vector3 basketballOrigin = new Vector3(0, 1, -8);
     private SteamVR_TrackedObject trackedObj;
     private GameObject collidingObject;
@@ -23,6 +23,10 @@ public class ContollerBehavior : MonoBehaviour
             basketball.transform.position = basketballOrigin;
             basketball.GetComponent<Rigidbody>().velocity = Vector3.zero;
             basketball.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+        }
+        if(Controller.GetPressDown(SteamVR_Controller.ButtonMask.Grip))
+        {
+            basketball.transform.position = trackedObj.transform.position;
         }
         
     }

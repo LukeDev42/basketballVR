@@ -8,6 +8,7 @@ TagManager:
   - Teleport Allowed
   - Trigger
   - ScoreText
+  - VRController
   layers:
   - Default
   - TransparentFX
