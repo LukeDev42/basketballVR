@@ -6,15 +6,24 @@ public class ContollerBehavior : MonoBehaviour
 {
 
     public GameObject basketball;
-    
+    public BoxCollider controllerHitBox;
+
     Vector3 basketballOrigin = new Vector3(0, 1, -8);
     private SteamVR_TrackedObject trackedObj;
     private GameObject collidingObject;
     private GameObject objectInHand;
+    private bool controllerPhysical;
 
     private SteamVR_Controller.Device Controller
     {
         get { return SteamVR_Controller.Input((int)trackedObj.index); }
+    }
+
+    private void Awake()
+    {
+        trackedObj = GetComponent<SteamVR_TrackedObject>();
+        controllerHitBox.isTrigger = true;
+        Debug.Log(controllerHitBox.enabled);
     }
     private void FixedUpdate()
     {
@@ -23,34 +32,43 @@ public class ContollerBehavior : MonoBehaviour
             basketball.transform.position = basketballOrigin;
             basketball.GetComponent<Rigidbody>().velocity = Vector3.zero;
             basketball.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+
+
         }
-        if(Controller.GetPressDown(SteamVR_Controller.ButtonMask.Grip))
-        {
-            basketball.transform.position = trackedObj.transform.position;
-        }
-        
+            if (Controller.GetPressDown(SteamVR_Controller.ButtonMask.Grip))
+            {
+                controllerHitBox.isTrigger = false;
+            }
+            if (Controller.GetPressUp(SteamVR_Controller.ButtonMask.Grip))
+            {
+                controllerHitBox.isTrigger = true;
+            }
     }
-    private void Awake()
-    {
-        trackedObj = GetComponent<SteamVR_TrackedObject>();
-    }
+
 
     private void Update()
     {
-        if (Controller.GetHairTriggerDown())
+        if (controllerHitBox.isTrigger == enabled)
         {
-            if (collidingObject)
+            if (Controller.GetHairTriggerDown())
             {
-                GrabObject();
+                if (collidingObject)
+                {
+                    GrabObject();
+                }
+            }
+
+            if (Controller.GetHairTriggerUp())
+            {
+                if (objectInHand)
+                {
+                    ReleaseObject();
+                }
             }
         }
-
-        if (Controller.GetHairTriggerUp())
+        else if(controllerHitBox.isTrigger == enabled)
         {
-            if (objectInHand)
-            {
-                ReleaseObject();
-            }
+            BounceObject();
         }
     }
 
@@ -108,6 +126,12 @@ public class ContollerBehavior : MonoBehaviour
         }
         //allow another object to be picked up
         objectInHand = null;
+    }
+
+    private void BounceObject()
+    {
+        collidingObject.GetComponent<Rigidbody>().velocity = Controller.velocity;
+        collidingObject.GetComponent<Rigidbody>().angularVelocity = Controller.angularVelocity;
     }
 
     private FixedJoint AddFixedJoint()
